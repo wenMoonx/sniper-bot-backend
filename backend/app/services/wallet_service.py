@@ -10,7 +10,7 @@ from app.common.logger import logger
 class WalletService:
     def create(user: User) -> tuple[str, str]:
         wallets  = Wallet.where(user=user.public_address)
-        if len(wallets) > settings.LIMIT_FREE_WALLET_CNT + user.wallet_count:
+        if len(wallets) >= settings.LIMIT_FREE_WALLET_CNT + user.wallet_count:
             raise errors.RequestError(msg="You need to pay bnb token to create additional walelts")
                 
 
