@@ -42,7 +42,7 @@ class Settings(BaseSettings):
 
     # WEB3
     # RPC_SERVER_URL: str = 'https://bsc-testnet.publicnode.com'
-    RPC_SERVER_URL: str = 'https://bsc.rpc.blxrbdn.com'
+    RPC_SERVER_URL: str = 'https://binance.llamarpc.com'
     CHAIN_ID: int = 56
     # CHAIN_ID: int = 97
     WALLET_PREFIX: str = 'KEYSMASH FJAFJKLDSKF7JKFDJ 1530'
