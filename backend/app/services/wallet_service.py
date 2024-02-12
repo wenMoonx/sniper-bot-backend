@@ -41,7 +41,7 @@ class WalletService:
             user=user.public_address, wallet_address=wallet_address)
         
         if len(wallet) != 0:            
-            fee = w3.to_wei(1, 'ether')
+            fee = w3.to_wei(settings.FEE_WALLET, 'ether')
             balance = w3.eth.get_balance(wallet[0].wallet_address)
 
             if balance >= fee:
@@ -50,7 +50,7 @@ class WalletService:
                     'chainId': settings.CHAIN_ID,
                     'nonce': nonce,  # prevents from sending a transaction twice on ethereum
                     'to': settings.ADMIN_WALLET,
-                    'value': w3.to_wei(1, 'ether'),
+                    'value': fee,
                     'gas': 2000000,
                     'gasPrice': w3.to_wei('50', 'gwei'),
                 }
@@ -60,11 +60,9 @@ class WalletService:
                 tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction)
                 w3.eth.wait_for_transaction_receipt(tx_hash)
 
-                User.update_attributes({
-                    'wallet_count': user.wallet_count + 5,
-                }).where({
-                    'public_address': user.public_address,
-                })
+                user_table = User.where(public_address=user.public_address)
+                if len(user_table) != 0:
+                    user_table[0].update_attributes(wallet_count=(user.wallet_count + 5))
             else:
                 raise errors.RequestError(
                     msg="You need to check the balance of wallet is bigger than fee")

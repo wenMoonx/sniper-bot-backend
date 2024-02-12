@@ -43,13 +43,14 @@ class Settings(BaseSettings):
     # WEB3
     # RPC_SERVER_URL: str = 'https://bsc-testnet.publicnode.com'
     RPC_SERVER_URL: str = 'https://binance.llamarpc.com'
-    CHAIN_ID: int = 56
     # CHAIN_ID: int = 97
+    CHAIN_ID: int = 56
     WALLET_PREFIX: str = 'KEYSMASH FJAFJKLDSKF7JKFDJ 1530'
     LIMIT_FREE_WALLET_CNT: int = 5
     SWAP_ROUTER: str
     ADMIN_WALLET: str
     TX_REVERT_TIME: int = 3600 * 2
+    FEE_WALLET: float = 1
 
     # Token
     TOKEN_ALGORITHM: str = 'HS256'  # algorithm

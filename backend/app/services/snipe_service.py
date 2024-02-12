@@ -36,13 +36,9 @@ class SnipeService:
                     signed_txn.rawTransaction)
                 w3.eth.wait_for_transaction_receipt(tx_hash)
                 
-                PresaleSnipe.update_attributes({
-                    'pair': pair,
-                    'status': 'finalized'
-                }).where({
-                    'wallet_address': wallet.wallet_address,
-                    'presale_contract': presale_contract
-                })
+                presale_snipe_table = PresaleSnipe.where(wallet_address=wallet.wallet_address, presale_contract=presale_contract)
+                if len(presale_snipe_table) != 0:
+                    presale_snipe_table[0].update_attributes(pair=pair, status='finalized')
 
                 logger.info('finished finalized')
 
@@ -88,12 +84,9 @@ class SnipeService:
         # token = get_token_by_address(presale_snipe.token) 
         amount = int(amount * 10 ** 18)
         
-        PresaleSnipe.update_attributes({
-            'status': 'started'
-        }).where({
-            'wallet_address': wallet.wallet_address,
-            'presale_contract': presale_snipe.presale_contract
-        })
+        presale_snipe_table = PresaleSnipe.where(wallet_address=wallet.wallet_address, presale_contract=presale_snipe.presale_contract)
+        if len(presale_snipe_table) != 0:
+            presale_snipe_table[0].update_attributes(status='started')
         
         logger.info('started listen_add_liquidity')
         try:
@@ -132,23 +125,18 @@ class SnipeService:
                         signed_txn.rawTransaction)
                     w3.eth.wait_for_transaction_receipt(tx_hash)
             
-                    PresaleSnipe.update_attributes({
-                        'status': 'finished'
-                    }).where({
-                        'wallet_address': wallet.wallet_address,
-                        'presale_contract': presale_snipe.presale_contract
-                    })
+                    presale_snipe_table = PresaleSnipe.where(wallet_address=wallet.wallet_address, presale_contract=presale_snipe.presale_contract)
+                    if len(presale_snipe_table) != 0:
+                        presale_snipe_table[0].update_attributes(status='finished')
+
                     logger.info('finished add_liquidity')
 
                     break
         except Exception as e:
             logger.error(e)
-            PresaleSnipe.update_attributes({
-                'status': 'failed'
-            }).where({
-                'wallet_address': wallet.wallet_address,
-                'presale_contract': presale_snipe.presale_contract
-            })
+            presale_snipe_table = PresaleSnipe.where(wallet_address=wallet.wallet_address, presale_contract=presale_snipe.presale_contract)
+            if len(presale_snipe_table) != 0:
+                presale_snipe_table[0].update_attributes(status='failed')
             
 
     def listen_contribute(contract_address: str, wallet: Wallet, presale_contract: str, token: str):

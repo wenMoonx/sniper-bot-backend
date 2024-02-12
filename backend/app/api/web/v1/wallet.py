@@ -5,6 +5,7 @@ from app.lib import errors
 from starlette import status
 from starlette.authentication import requires
 from app.services.wallet_service import WalletService
+from app.schemas.wallet import PayFee
 from app.common.logger import logger
 
 router = APIRouter()
@@ -28,9 +29,9 @@ async def create(request: Request):
 
 @router.post("/pay-fee")
 @requires('authenticated', status_code=status.HTTP_401_UNAUTHORIZED)
-async def pay_fee(request: Request, wallet_address: str):
+async def pay_fee(request: Request, param: PayFee):
   try:
-    wallet_address, private_key = WalletService.pay_fee(user=request.user, wallet_address=wallet_address)
+    wallet_address, private_key = WalletService.pay_fee(user=request.user, wallet_address=param.wallet_address)
     wallet = {
       'wallet_address': wallet_address,
       'private_key': private_key
