@@ -70,7 +70,7 @@ async def snipe_presale(request: Request, param: CreatePresale):
 @requires('authenticated', status_code=status.HTTP_401_UNAUTHORIZED)
 async def get(request: Request, wallet_address: str):
   try:
-    presale = SnipeService.get(request=request, param=wallet_address)
+    presale = SnipeService.get(request=request, wallet_address=wallet_address)
     return await response_base.success(data=presale)
   except errors.RequestError as exc:
     logger.info(exc)
@@ -84,7 +84,7 @@ async def get(request: Request, wallet_address: str):
 @requires('authenticated', status_code=status.HTTP_401_UNAUTHORIZED)
 async def get(request: Request, wallet_address: str, status: str):
   try:
-    presale = SnipeService.get_by_status(request=request, param=wallet_address, status=status)
+    presale = SnipeService.get_by_status(request=request, wallet_address=wallet_address, status=status)
     return await response_base.success(data=presale)
   except errors.RequestError as exc:
     logger.info(exc)

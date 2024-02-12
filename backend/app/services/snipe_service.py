@@ -21,7 +21,7 @@ class SnipeService:
         logger.info('started listen_finalize')
         while True:
             presale_contract = use_presale(contract_address)
-            event_filter = presale_contract.events.Finalized(fromBlock='latest')
+            event_filter = presale_contract.events.Finalized.create_filter(fromBlock='latest')
             
             for pair in event_filter.get_new_entries():
                 logger.info('finalized')
@@ -99,7 +99,7 @@ class SnipeService:
         try:
 
             while True:
-                event_filter = pair_contract.events.Mint(fromBlock='latest')
+                event_filter = pair_contract.events.Mint.create_filter(fromBlock='latest')
                 logger.info('started add_liquidity')
                 for sender, amount0, amount1 in event_filter.get_new_entries():
                     nonce = w3.eth.get_transaction_count(wallet.wallet_address)
@@ -154,7 +154,7 @@ class SnipeService:
     def listen_contribute(contract_address: str, wallet: Wallet, presale_contract: str, token: str):
         while True:
             presale_contract = use_presale(contract_address)
-            event_filter = presale_contract.events.Contributed(fromBlock='latest')
+            event_filter = presale_contract.events.Contributed.create_filter(fromBlock='latest')
             for sender, currency, amount, contributionAmount, time in event_filter.get_new_entries():
                 new_presale = {
                     'wallet_address': wallet.wallet_address,
