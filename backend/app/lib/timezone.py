@@ -35,6 +35,11 @@ class TimeZone:
         :return:
         """
         return datetime.strptime(date_str, format_str).replace(tzinfo=self.tz_info)
+    
+    def f_get_diff(self, timestamp: int) -> int:
+        current_time = self.now().timestamp()
+
+        return int(timestamp - current_time)
 
 
 timezone = TimeZone()

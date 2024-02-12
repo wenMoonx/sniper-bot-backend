@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class Token(BaseModel):
     address: str
@@ -6,14 +7,16 @@ class Token(BaseModel):
     decimals: int
     symbol: str
 
-class TokenTransfer(BaseModel):
+class TransferEth(BaseModel):
     wallet: str
-    token: str
-    amount: int
+    amount: float
     receiver: str
+
+class TokenTransfer(TransferEth):
+    token: str
 
 class Swap(BaseModel):
     wallet: str
-    src_token: str
-    dst_token: str
-    amount: int
+    src_token: Optional[str]
+    dst_token: Optional[str]
+    amount: float

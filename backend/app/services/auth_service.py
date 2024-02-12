@@ -8,7 +8,6 @@ from app.core.conf import settings
 from app.models.user import User
 from app.schemas.user import LoginUser
 import random
-import binascii
 from app.lib.web3 import w3
 from app.common.logger import logger
 from eth_account import Account, messages
