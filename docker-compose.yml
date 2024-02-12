@@ -27,6 +27,7 @@ services:
       ADMIN_EMAIL: ${ADMIN_EMAIL}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       SWAP_ROUTER: ${SWAP_ROUTER}
+      ADMIN_WALLET: ${ADMIN_WALLET}
     depends_on:
       - db
       - redis

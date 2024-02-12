@@ -38,7 +38,7 @@ class SnipeService:
                 
                 PresaleSnipe.update_attributes({
                     'pair': pair,
-                    'status': 'finalize'
+                    'status': 'finalized'
                 }).where({
                     'wallet_address': wallet.wallet_address,
                     'presale_contract': presale_contract

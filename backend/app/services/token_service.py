@@ -5,6 +5,7 @@ from app.lib.contracts.erc20_token import use_token
 from app.lib.contracts.pancake_router import use_swap_router
 from app.lib.token import get_token_by_address
 from app.lib.web3 import w3, zero_address, Web3
+from app.lib.token import wbnb
 from app.core.conf import settings
 from app.lib import errors
 import time
@@ -86,7 +87,7 @@ class TokenService:
             if param.src_token == zero_address:
                 transaction = router_contract.functions.swapExactETHForTokens(
                     10,
-                    [Web3.to_checksum_address('0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867'), Web3.to_checksum_address(
+                    [Web3.to_checksum_address(wbnb[settings.CHAIN_ID]), Web3.to_checksum_address(
                         param.dst_token)],
                     param.wallet,
                     int(time.time() + settings.TX_REVERT_TIME)
@@ -137,7 +138,7 @@ class TokenService:
                     10,
                     # 0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd
                     [Web3.to_checksum_address(param.src_token), Web3.to_checksum_address(
-                        '0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867')],
+                        wbnb[settings.CHAIN_ID])],
                     param.wallet,
                     int(time.time() + settings.TX_REVERT_TIME)
                 ).build_transaction({

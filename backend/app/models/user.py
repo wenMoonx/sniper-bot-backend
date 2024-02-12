@@ -12,5 +12,6 @@ class User(Base):
   username = Column(String)
   public_address = Column(String)
   nonce = Column(Integer)
-  created_at = Column(DateTime, default= datetime.datetime.now)
+  wallet_count = Column(Integer, default=0)
+  created_at = Column(DateTime, default=datetime.datetime.now)
   updated_at = Column(DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)

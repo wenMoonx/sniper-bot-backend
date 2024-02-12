@@ -14,5 +14,5 @@ class PresaleSnipe(Base):
   token = Column(String)
   presale_contract = Column(String)
   status = Column(String)
-  created_at = Column(DateTime, default= datetime.datetime.now)
+  created_at = Column(DateTime, default=datetime.datetime.now)
   updated_at = Column(DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)

@@ -13,7 +13,24 @@ router = APIRouter()
 @requires('authenticated', status_code=status.HTTP_401_UNAUTHORIZED)
 async def create(request: Request):
   try:
-    wallet_address, private_key = WalletService.create(userWallet=request.user.public_address)
+    wallet_address, private_key = WalletService.create(user=request.user)
+    wallet = {
+      'wallet_address': wallet_address,
+      'private_key': private_key
+    }
+    return await response_base.success(data=wallet)
+  except errors.RequestError as exc:
+    logger.info(exc)
+    return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
+  except Exception as e:
+    logger.info(e)
+    return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail="")
+
+@router.post("/pay-fee")
+@requires('authenticated', status_code=status.HTTP_401_UNAUTHORIZED)
+async def pay_fee(request: Request, wallet_address: str):
+  try:
+    wallet_address, private_key = WalletService.pay_fee(user=request.user, wallet_address=wallet_address)
     wallet = {
       'wallet_address': wallet_address,
       'private_key': private_key

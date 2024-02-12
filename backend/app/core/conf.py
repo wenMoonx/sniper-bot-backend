@@ -48,6 +48,7 @@ class Settings(BaseSettings):
     WALLET_PREFIX: str = 'KEYSMASH FJAFJKLDSKF7JKFDJ 1530'
     LIMIT_FREE_WALLET_CNT: int = 5
     SWAP_ROUTER: str
+    ADMIN_WALLET: str
     TX_REVERT_TIME: int = 3600 * 2
 
     # Token

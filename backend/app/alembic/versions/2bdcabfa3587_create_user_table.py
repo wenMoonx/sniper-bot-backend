@@ -21,6 +21,7 @@ def upgrade() -> None:
     sa.Column('username', sa.String()),
     sa.Column('public_address', sa.String()),
     sa.Column('nonce', sa.INTEGER()),
+    sa.Column('wallet_count', sa.INTEGER()),
     sa.Column('created_at', sa.DateTime()),
 		sa.Column('updated_at', sa.DateTime())
   )
