@@ -16,6 +16,11 @@ class TokenService:
         wallet = Wallet.where(
             user=request.user.public_address, wallet_address=param.wallet)
         if len(wallet) != 0:
+            balance = w3.eth.get_balance(param.wallet)
+            if balance < w3.to_wei(settings.TX_FEE, 'ether'):
+                raise errors.RequestError(
+                    msg="Please check your BNB balance is enough to make the tx")
+
             contract = use_token(param.token)
             token = get_token_by_address(param.token)            
 

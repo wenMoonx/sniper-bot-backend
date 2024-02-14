@@ -21,6 +21,8 @@ class WalletService:
             'user': user.public_address
         }
 
+        print(new_wallet)
+
         Wallet.create(**new_wallet)
 
         return acct.address, w3.to_hex(acct.key)
