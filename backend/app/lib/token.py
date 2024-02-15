@@ -41,7 +41,7 @@ wbnb = {
             symbol="WBNB"
         ),
     56: Token(
-            address="0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867",
+            address="0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
             name="WBNB",
             decimals=18,
             symbol="WBNB"
