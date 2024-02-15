@@ -84,6 +84,7 @@ class TokenService:
                 msg="Please check the wallet address is correct")
 
     def swap(request: Request, param: Swap):
+        print(param)
         wallet = Wallet.where(
             user=request.user.public_address, wallet_address=param.wallet)
         nonce = w3.eth.get_transaction_count(param.wallet)
