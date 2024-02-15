@@ -29,6 +29,12 @@ tokens = {
             name="BUSD",
             decimals=18,
             symbol="BUSD"
+        ),
+        Token(
+            address="0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            name="Cake",
+            decimals=18,
+            symbol="Cake"
         )
     ]
 }
