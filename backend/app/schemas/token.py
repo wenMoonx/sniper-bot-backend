@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Sequence
 
 class Token(BaseModel):
     address: str
@@ -20,3 +20,11 @@ class Swap(BaseModel):
     src_token: Optional[str]
     dst_token: Optional[str]
     amount: float
+
+class MultiTransferEth(BaseModel):
+    wallets: Sequence[str]
+    amount_type: int
+    receiver: str
+
+class MultiTokenTransfer(MultiTransferEth):
+    token: str

@@ -11,11 +11,11 @@ tokens = {
             symbol="USDT"
         ),
         Token(
-            address="0x78867BbEeF44f2326bF8DDd1941a4439382EF2A7",
+            address="0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee",
             name="BUSD",
             decimals=18,
             symbol="BUSD"
-        ),
+        )
     ],
     56: [
         Token(
@@ -35,6 +35,12 @@ tokens = {
             name="Cake",
             decimals=18,
             symbol="Cake"
+        ),
+        Token(
+            address="0xe3a067215d45ba1bd3518076f89bbdd3812e9061",
+            name="DragonGROK",
+            decimals=9,
+            symbol="DragonGROK"
         )
     ]
 }
