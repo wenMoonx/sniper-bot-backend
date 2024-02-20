@@ -281,7 +281,7 @@ class TokenService:
                         wallet_addr,
                         int(time.time() + settings.TX_REVERT_TIME)
                     ).build_transaction({
-                        'from': param.wallet,
+                        'from': wallet_addr,
                         'gasPrice': w3.to_wei('5', 'gwei'),
                         # This is the Token(BNB) amount you want to Swap from
                         'value': int(amount),
