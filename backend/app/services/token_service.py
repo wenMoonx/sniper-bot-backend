@@ -273,6 +273,10 @@ class TokenService:
             if len(wallet) != 0:
                 if param.src_token == zero_address:
                     balance = w3.eth.get_balance(wallet_addr)
+                    
+                    if balance == 0:
+                        continue
+                    
                     amount = balance * TokenService.get_rate(param.amount_type)
                     transaction = router_contract.functions.swapExactETHForTokens(
                         10,
