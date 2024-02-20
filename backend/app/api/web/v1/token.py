@@ -91,7 +91,7 @@ async def swap(request: Request, param: Swap):
 @requires('authenticated', status_code=status.HTTP_401_UNAUTHORIZED)
 async def multi_swap(request: Request, param: MultiSwap):
     try:
-        TokenService.swap(request=request, param=param)
+        TokenService.multi_swap(request=request, param=param)
         return await response_base.success()
     except errors.RequestError as exc:
         return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
