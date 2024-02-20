@@ -14,6 +14,7 @@ from app.lib.contracts.pair_token import use_pair
 from app.models.presale_snipe import PresaleSnipe
 from app.lib.contracts.erc20_token import use_token
 from app.lib.contracts.pancake_router import use_swap_router
+from app.lib.utils import extract_wallet_address
 import time
 
 class SnipeService:
@@ -139,7 +140,7 @@ class SnipeService:
                 presale_snipe_table[0].update_attributes(status='failed')
             
 
-    def listen_contribute(contract_address: str, wallet: Wallet, presale_contract: str, token: str):
+    def listen_contribute(contract_address: str, wallet: Wallet, token: str):
         while True:
             presale_contract = use_presale(contract_address)
             event_filter = presale_contract.events.Contributed.create_filter(fromBlock='latest')
@@ -147,7 +148,7 @@ class SnipeService:
                 new_presale = {
                     'wallet_address': wallet.wallet_address,
                     'currency': currency,
-                    'presale_contract': presale_contract,
+                    'presale_contract': contract_address,
                     'status': 'contributed',
                     'token': token
                 }
@@ -163,19 +164,21 @@ class SnipeService:
         wallet = Wallet.where(
             user=request.user.public_address, wallet_address=param.wallet)
         if len(wallet) != 0:
-            presale_contract = use_presale(param.presale_contract)
+            presale_contract_addr = extract_wallet_address(param.url)
+            presale_contract = use_presale(presale_contract_addr)
             logger.info('checking min, max check')
             min, max = presale_contract.functions.getContributionSettings().call()
+            poolSettings = presale_contract.functions.poolSettings().call()
             amount = w3.to_wei(param.amount, 'ether')
             print(amount)
             print(min)
             print(max)
             if amount >= min and amount <= max:
                 logger.info('paased min, max check')
-                timeStampThread = threading.Thread(target=SnipeService.listen_presale_start, args=(param.presale_contract, wallet[0], param.amount))
+                timeStampThread = threading.Thread(target=SnipeService.listen_presale_start, args=(presale_contract_addr, wallet[0], param.amount))
                 timeStampThread.start()
 
-                contributeThread = threading.Thread(target=SnipeService.listen_contribute, args=(param.presale_contract, wallet[0], param.presale_contract, param.token))
+                contributeThread = threading.Thread(target=SnipeService.listen_contribute, args=(presale_contract_addr, wallet[0], poolSettings.token))
                 contributeThread.start()
             else:
                 raise errors.RequestError(
@@ -186,7 +189,8 @@ class SnipeService:
 
 
     def claim(request: Request, param: Claim):
-        presale_contract = use_presale(param.presale_contract)
+        presale_contract_addr = extract_wallet_address(param.url)
+        presale_contract = use_presale(presale_contract_addr)
         wallet = Wallet.where(
             user=request.user.public_address, wallet_address=param.wallet)
         
@@ -208,7 +212,8 @@ class SnipeService:
         
 
     def withdrawContribution(request: Request, param: Claim):
-        presale_contract = use_presale(param.presale_contract)
+        presale_contract_addr = extract_wallet_address(param.url)
+        presale_contract = use_presale(presale_contract_addr)
         wallet = Wallet.where(
             user=request.user.public_address, wallet_address=param.wallet)
         
@@ -230,8 +235,9 @@ class SnipeService:
 
 
     def snipe_presale(request: Request, param: CreatePresale):
+        presale_contract_addr = extract_wallet_address(param.url)
         presale_snipe = PresaleSnipe.where(
-            presale_contract=param.presale_contract, wallet_address=param.wallet)
+            presale_contract=presale_contract_addr, wallet_address=param.wallet)
         
         wallet = Wallet.where(
             user=request.user.public_address, wallet_address=param.wallet)

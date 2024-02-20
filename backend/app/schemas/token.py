@@ -21,6 +21,12 @@ class Swap(BaseModel):
     dst_token: Optional[str]
     amount: float
 
+class MultiSwap(BaseModel):
+    wallets: Sequence[str]
+    src_token: Optional[str]
+    dst_token: Optional[str]
+    amount_type: int
+
 class MultiTransferEth(BaseModel):
     wallets: Sequence[str]
     amount_type: int

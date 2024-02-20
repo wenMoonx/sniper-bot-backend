@@ -1,6 +1,6 @@
 from fastapi import Request
 from app.models.wallet import Wallet
-from app.schemas.token import TokenTransfer, MultiTokenTransfer, Swap, MultiTransferEth
+from app.schemas.token import TokenTransfer, MultiTokenTransfer, Swap, MultiTransferEth, MultiSwap
 from app.lib.contracts.erc20_token import use_token
 from app.lib.contracts.pancake_router import use_swap_router
 from app.lib.token import get_token_by_address
@@ -260,3 +260,89 @@ class TokenService:
         else:
             raise errors.RequestError(
                 msg="Please check the wallet address is correct")
+        
+    
+    def multi_swap(request: Request, param: MultiSwap):
+        print(param)
+        
+        for wallet_addr in param.wallets:
+            wallet = Wallet.where(
+                user=request.user.public_address, wallet_address=wallet_addr)
+            nonce = w3.eth.get_transaction_count(wallet_addr)
+            router_contract = use_swap_router()
+            if len(wallet) != 0:
+                if param.src_token == zero_address:
+                    balance = w3.eth.get_balance(wallet_addr)
+                    amount = balance * TokenService.get_rate(param.amount_type)
+                    transaction = router_contract.functions.swapExactETHForTokens(
+                        10,
+                        [Web3.to_checksum_address(wbnb[settings.CHAIN_ID].address), Web3.to_checksum_address(
+                            param.dst_token)],
+                        wallet_addr,
+                        int(time.time() + settings.TX_REVERT_TIME)
+                    ).build_transaction({
+                        'from': param.wallet,
+                        'gasPrice': w3.to_wei('5', 'gwei'),
+                        # This is the Token(BNB) amount you want to Swap from
+                        'value': int(amount),
+                        'nonce': nonce,
+                    })
+
+                    signed_txn = w3.eth.account.sign_transaction(
+                        transaction, wallet[0].private_key)
+                    tx_hash = w3.eth.send_raw_transaction(
+                        signed_txn.rawTransaction)
+                    w3.eth.wait_for_transaction_receipt(tx_hash)
+
+                    print(tx_hash)
+
+                if param.dst_token == zero_address:
+                    token_contract = use_token(param.src_token)
+                    token = get_token_by_address(param.src_token)
+
+                    if token is None:
+                        raise errors.RequestError(
+                            msg='Swap token is not allowed')
+
+                
+                    balance = token_contract.functions.balanceOf(
+                        wallet_addr).call()
+                    
+                    if balance == 0:
+                        continue
+                    
+                    amount = int(balance * TokenService.get_rate(param.amount_type))
+
+                    transaction = token_contract.functions.approve(Web3.to_checksum_address(settings.SWAP_ROUTER), amount).build_transaction({
+                        'from': wallet_addr,
+                        'nonce': nonce,
+                    })
+                    signed_txn = w3.eth.account.sign_transaction(
+                        transaction, wallet[0].private_key)
+                    tx_hash = w3.eth.send_raw_transaction(
+                        signed_txn.rawTransaction)
+                    w3.eth.wait_for_transaction_receipt(tx_hash)
+
+                    nonce = w3.eth.get_transaction_count(wallet_addr)
+                    transaction = router_contract.functions.swapExactTokensForETH(
+                        amount,
+                        10,
+                        [Web3.to_checksum_address(param.src_token), Web3.to_checksum_address(
+                            wbnb[settings.CHAIN_ID].address)],
+                        wallet_addr,
+                        int(time.time() + settings.TX_REVERT_TIME)
+                    ).build_transaction({
+                        'from': wallet_addr,
+                        'nonce': nonce,
+                    })
+
+                    signed_txn = w3.eth.account.sign_transaction(
+                        transaction, wallet[0].private_key)
+                    tx_hash = w3.eth.send_raw_transaction(
+                        signed_txn.rawTransaction)
+                    w3.eth.wait_for_transaction_receipt(tx_hash)
+
+                    print(tx_hash)
+            else:
+                raise errors.RequestError(
+                    msg="Please check the wallet address is correct")
