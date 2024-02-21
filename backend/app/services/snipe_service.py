@@ -63,8 +63,8 @@ class SnipeService:
                     'to': contract_address,
                     'value': w3.to_wei(float(amount), 'ether'),
                     'chainId': settings.CHAIN_ID,     
-                    'gas': 2000000,
-                    'gasPrice': w3.to_wei('50', 'gwei'),
+                    'gas': 21000,
+                    'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
                 })
                 signed_txn = w3.eth.account.sign_transaction(
                     transaction, wallet.private_key)
