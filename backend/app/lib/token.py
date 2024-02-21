@@ -44,9 +44,9 @@ tokens = {
         ),
         Token(
             address="0x55d398326f99059fF775485246999027B3197955",
-            name="BSC-USD",
+            name="USDT",
             decimals=18,
-            symbol="BSC-USD"
+            symbol="USDT"
         )
     ]
 }
