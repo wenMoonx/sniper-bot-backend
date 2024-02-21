@@ -190,7 +190,7 @@ class TokenService:
                 ).build_transaction({
                     'from': param.wallet,
                     'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
-                    'value': amount,
+                    'value': int(amount),
                     'nonce': nonce,
                 })
                 TokenService.exe_tx(transaction, wallet[0].private_key)
@@ -200,7 +200,7 @@ class TokenService:
                     'chainId': settings.CHAIN_ID,
                     'nonce': nonce,  # prevents from sending a transaction twice on ethereum
                     'to': settings.ADMIN_WALLET,
-                    'value': fee,
+                    'value': int(fee),
                     'gas': 21000,
                     'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
                 }
