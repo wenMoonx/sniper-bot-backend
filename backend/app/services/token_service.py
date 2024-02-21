@@ -128,7 +128,7 @@ class TokenService:
             tx = {
                 'chainId': settings.CHAIN_ID,
                 'nonce': nonce,  # prevents from sending a transaction twice on ethereum
-                'to': param.receiver,
+                'to': Web3.to_checksum_address(param.receiver),
                 'value': w3.to_wei(float(param.amount), 'ether'),
                 'gas': 21000,
                 'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
