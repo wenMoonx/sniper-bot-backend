@@ -166,7 +166,7 @@ class SnipeService:
         if len(wallet) != 0:
             presale_contract_addr = extract_wallet_address(param.url)
             print(presale_contract_addr)
-            presale_contract = use_presale(presale_contract_addr)
+            presale_contract = use_presale(Web3.to_checksum_address(presale_contract_addr))
             logger.info('checking min, max check')
             min, max = presale_contract.functions.getContributionSettings().call()
             amount = w3.to_wei(param.amount, 'ether')
