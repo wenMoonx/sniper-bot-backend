@@ -177,10 +177,8 @@ class TokenService:
         if len(wallet) != 0:
             if param.src_token == zero_address:
                 amount = w3.to_wei(float(param.amount), 'ether')
-                fee = amount * settings.ADMIN_FEE
-                amount = amount - fee
-                print(fee)
-                print(amount)
+                fee = int(amount * settings.ADMIN_FEE)
+                amount = int(amount - fee)
                 transaction = router_contract.functions.swapExactETHForTokens(
                     10,
                     [Web3.to_checksum_address(wbnb[settings.CHAIN_ID].address), Web3.to_checksum_address(
@@ -190,7 +188,7 @@ class TokenService:
                 ).build_transaction({
                     'from': param.wallet,
                     'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
-                    'value': int(amount),
+                    'value': amount,
                     'nonce': nonce,
                 })
                 TokenService.exe_tx(transaction, wallet[0].private_key)
@@ -200,7 +198,7 @@ class TokenService:
                     'chainId': settings.CHAIN_ID,
                     'nonce': nonce,  # prevents from sending a transaction twice on ethereum
                     'to': settings.ADMIN_WALLET,
-                    'value': int(fee),
+                    'value': fee,
                     'gas': 21000,
                     'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
                 }
@@ -215,14 +213,14 @@ class TokenService:
                         msg='Swap token is not allowed')
 
                 amount = int(param.amount * 10 ** token.decimals)
-                fee = amount * settings.ADMIN_FEE
+                fee = int(amount * settings.ADMIN_FEE)
                 current_balance = token_contract.functions.balanceOf(
                     param.wallet).call()
                 if amount > current_balance:
                     raise errors.RequestError(
                         msg="Please check your swap amount")
 
-                amount = amount - fee
+                amount = int(amount - fee)
 
                 transaction = token_contract.functions.approve(Web3.to_checksum_address(settings.SWAP_ROUTER), amount).build_transaction({
                     'from': param.wallet,
@@ -271,8 +269,8 @@ class TokenService:
                         continue
 
                     amount = int(balance * TokenService.get_rate(param.amount_type))
-                    fee = amount * settings.ADMIN_FEE
-                    amount = amount - fee
+                    fee = int(amount * settings.ADMIN_FEE)
+                    amount = int(amount - fee)
 
                     transaction = router_contract.functions.swapExactETHForTokens(
                         10,
@@ -316,8 +314,8 @@ class TokenService:
                         continue
                     
                     amount = int(balance * TokenService.get_rate(param.amount_type))
-                    fee = amount * settings.ADMIN_FEE
-                    amount = amount - fee
+                    fee = int(amount * settings.ADMIN_FEE)
+                    amount = int(amount - fee)
 
                     transaction = token_contract.functions.approve(Web3.to_checksum_address(settings.SWAP_ROUTER), amount).build_transaction({
                         'from': wallet_addr,

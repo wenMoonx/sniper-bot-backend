@@ -41,6 +41,12 @@ tokens = {
             name="DragonGROK",
             decimals=9,
             symbol="DragonGROK"
+        ),
+        Token(
+            address="0x55d398326f99059fF775485246999027B3197955",
+            name="BSC-USD",
+            decimals=18,
+            symbol="BSC-USD"
         )
     ]
 }
