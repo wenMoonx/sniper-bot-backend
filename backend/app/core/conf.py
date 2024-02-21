@@ -51,6 +51,7 @@ class Settings(BaseSettings):
     ADMIN_WALLET: str
     TX_REVERT_TIME: int = 3600 * 2
     FEE_WALLET: float = 1
+    ADMIN_FEE: float = 0.01 # Percent
     TX_FEE: float = 0.0001
 
     # Token
