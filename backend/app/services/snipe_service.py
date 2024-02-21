@@ -169,11 +169,11 @@ class SnipeService:
             presale_contract = use_presale(presale_contract_addr)
             logger.info('checking min, max check')
             min, max = presale_contract.functions.getContributionSettings().call()
-            poolSettings = presale_contract.functions.poolSettings().call()
             amount = w3.to_wei(param.amount, 'ether')
             print(amount)
             print(min)
             print(max)
+            poolSettings = presale_contract.functions.poolSettings().call()
             if amount >= min and amount <= max:
                 logger.info('paased min, max check')
                 timeStampThread = threading.Thread(target=SnipeService.listen_presale_start, args=(presale_contract_addr, wallet[0], param.amount))
