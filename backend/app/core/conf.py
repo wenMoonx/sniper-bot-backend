@@ -42,7 +42,7 @@ class Settings(BaseSettings):
 
     # WEB3
     # RPC_SERVER_URL: str = 'https://bsc-testnet.publicnode.com'
-    RPC_SERVER_URL: str = 'https://bsc.rpc.blxrbdn.com'
+    RPC_SERVER_URL: str = 'https://bsc-mainnet.public.blastapi.io'
     # CHAIN_ID: int = 97
     CHAIN_ID: int = 56
     WALLET_PREFIX: str = 'KEYSMASH FJAFJKLDSKF7JKFDJ 1530'
