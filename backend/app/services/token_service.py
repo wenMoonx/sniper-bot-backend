@@ -130,8 +130,8 @@ class TokenService:
                 'nonce': nonce,  # prevents from sending a transaction twice on ethereum
                 'to': param.receiver,
                 'value': w3.to_wei(float(param.amount), 'ether'),
-                'gas': 2000000,
-                'gasPrice': w3.to_wei('5', 'gwei'),
+                'gas': 21000,
+                'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
             }
             TokenService.exe_tx(tx, wallet[0].private_key)
         else:
@@ -158,8 +158,8 @@ class TokenService:
                     'nonce': nonce,  # prevents from sending a transaction twice on ethereum
                     'to': param.receiver,
                     'value': int(amount),
-                    'gas': 2000000,
-                    'gasPrice': w3.to_wei('5', 'gwei'),
+                    'gas': 21000,
+                    'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
                 }
                 
                 TokenService.exe_tx(tx, wallet[0].private_key)
@@ -188,7 +188,7 @@ class TokenService:
                     int(time.time() + settings.TX_REVERT_TIME)
                 ).build_transaction({
                     'from': param.wallet,
-                    'gasPrice': w3.to_wei('5', 'gwei'),
+                    'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
                     'value': amount,
                     'nonce': nonce,
                 })
@@ -200,8 +200,8 @@ class TokenService:
                     'nonce': nonce,  # prevents from sending a transaction twice on ethereum
                     'to': settings.ADMIN_WALLET,
                     'value': fee,
-                    'gas': 2000000,
-                    'gasPrice': w3.to_wei('5', 'gwei'),
+                    'gas': 21000,
+                    'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
                 }
                 TokenService.exe_tx(tx, wallet[0].private_key)
 
@@ -281,7 +281,7 @@ class TokenService:
                         int(time.time() + settings.TX_REVERT_TIME)
                     ).build_transaction({
                         'from': wallet_addr,
-                        'gasPrice': w3.to_wei('5', 'gwei'),
+                        'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
                         # This is the Token(BNB) amount you want to Swap from
                         'value': amount,
                         'nonce': nonce,
@@ -294,8 +294,8 @@ class TokenService:
                         'nonce': nonce,  # prevents from sending a transaction twice on ethereum
                         'to': settings.ADMIN_WALLET,
                         'value': fee,
-                        'gas': 2000000,
-                        'gasPrice': w3.to_wei('5', 'gwei'),
+                        'gas': 21000,
+                        'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
                     }
                     TokenService.exe_tx(tx, wallet[0].private_key)
 

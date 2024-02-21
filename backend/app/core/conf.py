@@ -53,6 +53,7 @@ class Settings(BaseSettings):
     FEE_WALLET: float = 1
     ADMIN_FEE: float = 0.01 # Percent
     TX_FEE: float = 0.0001
+    GAS_PRICE: int = 3
 
     # Token
     TOKEN_ALGORITHM: str = 'HS256'  # algorithm
