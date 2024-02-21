@@ -19,6 +19,69 @@
     },
     {
         "inputs": [],
+        "name": "poolSettings",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "token",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "currency",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "affliateProgram",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "whitelistManager",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "startTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "softCap",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalSellingTokens",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxContribution",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "liquidityLockDays",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint128",
+            "name": "liquidityPercent",
+            "type": "uint128"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "getTime",
         "outputs": [
             {
