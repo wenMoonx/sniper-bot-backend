@@ -174,6 +174,7 @@ class SnipeService:
             print(min)
             print(max)
             poolSettings = presale_contract.functions.poolSettings().call()
+            print(poolSettings)
             if amount >= min and amount <= max:
                 logger.info('paased min, max check')
                 timeStampThread = threading.Thread(target=SnipeService.listen_presale_start, args=(presale_contract_addr, wallet[0], param.amount))
