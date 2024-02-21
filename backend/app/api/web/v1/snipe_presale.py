@@ -52,11 +52,11 @@ async def withdrawContribution(request: Request, param: Claim):
     return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail="")
   
 
-@router.post("/snipe")
+@router.post("/snipe-token")
 @requires('authenticated', status_code=status.HTTP_401_UNAUTHORIZED)
-async def snipe_presale(request: Request, param: CreatePresale):
+async def snipe_token(request: Request, param: CreatePresale):
   try:
-    SnipeService.snipe_presale(request=request, param=param)
+    SnipeService.snipe_token(request=request, param=param)
     return await response_base.success()
   except errors.RequestError as exc:
     logger.info(exc)

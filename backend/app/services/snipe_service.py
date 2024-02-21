@@ -235,7 +235,7 @@ class SnipeService:
                 msg="Please check the wallet address is correct")
 
 
-    def snipe_presale(request: Request, param: CreatePresale):
+    def snipe_token(request: Request, param: CreatePresale):
         presale_contract_addr = extract_wallet_address(param.url)
         presale_snipe = PresaleSnipe.where(
             presale_contract=presale_contract_addr, wallet_address=param.wallet)
