@@ -180,7 +180,7 @@ class SnipeService:
                 timeStampThread = threading.Thread(target=SnipeService.listen_presale_start, args=(presale_contract_addr, wallet[0], param.amount))
                 timeStampThread.start()
 
-                contributeThread = threading.Thread(target=SnipeService.listen_contribute, args=(presale_contract_addr, wallet[0], poolSettings.token))
+                contributeThread = threading.Thread(target=SnipeService.listen_contribute, args=(presale_contract_addr, wallet[0], poolSettings[0]))
                 contributeThread.start()
             else:
                 raise errors.RequestError(
