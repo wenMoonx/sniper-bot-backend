@@ -179,7 +179,8 @@ class TokenService:
                 amount = w3.to_wei(float(param.amount), 'ether')
                 fee = amount * settings.ADMIN_FEE
                 amount = amount - fee
-
+                print(fee)
+                print(amount)
                 transaction = router_contract.functions.swapExactETHForTokens(
                     10,
                     [Web3.to_checksum_address(wbnb[settings.CHAIN_ID].address), Web3.to_checksum_address(
