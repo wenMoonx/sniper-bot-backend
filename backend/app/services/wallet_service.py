@@ -4,7 +4,7 @@ from app.core.conf import settings
 from app.models.wallet import Wallet
 from app.models.user import User
 from typing import Sequence
-from app.lib import errors
+from app.lib import errors, utils
 from app.common.logger import logger
 
 class WalletService:
@@ -56,14 +56,12 @@ class WalletService:
                     'gas': 21000,
                     'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
                 }
-
-                signed_tx = w3.eth.account.sign_transaction(
-                    tx, wallet[0].private_key)
-                tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction)
-                w3.eth.wait_for_transaction_receipt(tx_hash)
+                
+                utils.exe_tx(tx, wallet[0].private_key)
 
                 user_table = User.where(public_address=user.public_address)
                 if len(user_table) != 0:
+                    print(user_table)
                     user_table[0].update_attributes(wallet_count=(user.wallet_count + 5))
             else:
                 raise errors.RequestError(

@@ -31,12 +31,8 @@ async def create(request: Request):
 @requires('authenticated', status_code=status.HTTP_401_UNAUTHORIZED)
 async def pay_fee(request: Request, param: PayFee):
   try:
-    wallet_address, private_key = WalletService.pay_fee(user=request.user, wallet_address=param.wallet_address)
-    wallet = {
-      'wallet_address': wallet_address,
-      'private_key': private_key
-    }
-    return await response_base.success(data=wallet)
+    WalletService.pay_fee(user=request.user, wallet_address=param.wallet_address)
+    return await response_base.success()
   except errors.RequestError as exc:
     logger.info(exc)
     return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
