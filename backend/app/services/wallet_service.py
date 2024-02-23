@@ -28,14 +28,20 @@ class WalletService:
         return acct.address, w3.to_hex(acct.key)
 
 
-    def get(userWallet: str) -> Sequence[Wallet]:
-        try:
-            wallets  = Wallet.where(user=userWallet)
+    def get(userWallet: str):
+        result = []
+        wallets  = Wallet.where(user=userWallet)
 
-            return wallets
-        except Exception as e:
-            logger.info(e)
-            raise errors.ServerError()
+        if len(wallets) != 0:
+            for wallet in wallets:
+                balance = utils.get_balance(wallet_addr=wallet.wallet_address)
+                
+                result.append({
+                    **wallet,
+                    "balance": balance
+                })
+
+        return result
     
     
     def pay_fee(user: User, wallet_address: str):
@@ -70,19 +76,3 @@ class WalletService:
         else:
             raise errors.RequestError(
                 msg="Please check the wallet address is correct")
-
-    
-    def get_balance(user: User):
-        balances = []
-        wallets = Wallet.where(
-            user=user.public_address)
-        
-        if len(wallets) != 0:
-            for wallet in wallets:
-                balance = utils.get_balance(wallet_addr=wallet.wallet_address)
-                balances.append({
-                    "wallet_address": wallet.wallet_address,
-                    "balance": balance
-                })
-        
-        return balances
