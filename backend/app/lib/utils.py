@@ -25,5 +25,5 @@ def exe_tx(tx: object, pk: str):
 def get_balance(wallet_addr: str):
     print(f'{settings.TOKEN_BALANCE_URL}&address={wallet_addr}')
     response = requests.get(f'{settings.TOKEN_BALANCE_URL}&address={wallet_addr}')
-    response = json.loads(response)
+    response = response.json()
     return response['result']
