@@ -10,6 +10,7 @@ from app.common.logger import logger
 
 router = APIRouter()
 
+
 @router.post("/")
 @requires('authenticated', status_code=status.HTTP_401_UNAUTHORIZED)
 async def create(request: Request):
@@ -27,12 +28,27 @@ async def create(request: Request):
     logger.info(e)
     return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail="")
 
+
 @router.post("/pay-fee")
 @requires('authenticated', status_code=status.HTTP_401_UNAUTHORIZED)
 async def pay_fee(request: Request, param: PayFee):
   try:
     WalletService.pay_fee(user=request.user, wallet_address=param.wallet_address)
     return await response_base.success()
+  except errors.RequestError as exc:
+    logger.info(exc)
+    return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
+  except Exception as e:
+    logger.info(e)
+    return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail="")
+  
+
+@router.post("/get-balance")
+@requires('authenticated', status_code=status.HTTP_401_UNAUTHORIZED)
+async def get_balance(request: Request):
+  try:
+    balances = WalletService.get_balance(user=request.user)
+    return await response_base.success(data=balances)
   except errors.RequestError as exc:
     logger.info(exc)
     return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)

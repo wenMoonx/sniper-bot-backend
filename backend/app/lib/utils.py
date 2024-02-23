@@ -1,5 +1,7 @@
 import re
 from app.lib.web3 import w3
+from app.core.conf import settings
+import requests
 
 def extract_wallet_address(url):
     # Regular expression pattern to match Ethereum/BSC wallet addresses
@@ -18,3 +20,8 @@ def exe_tx(tx: object, pk: str):
     tx = w3.eth.get_transaction(tx_hash)
 
     print(tx)
+
+def get_balance(wallet_addr: str):
+    response = requests.get(f'{settings.TOKEN_BALANCE_URL}&address={wallet_addr}')
+
+    return response

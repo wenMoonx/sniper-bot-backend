@@ -70,3 +70,13 @@ class WalletService:
         else:
             raise errors.RequestError(
                 msg="Please check the wallet address is correct")
+
+    
+    def get_balance(user: User):
+        wallets = Wallet.where(
+            user=user.public_address)
+        
+        if len(wallets) != 0:
+            for wallet in wallets:
+                balance = utils.get_balance(wallet_addr=wallet.wallet_address)
+                print(balance)

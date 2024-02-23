@@ -65,6 +65,8 @@ class Settings(BaseSettings):
     TOKEN_EXCLUDE: list[str] = [  # whitelist
         f'{API_V1_STR}/auth/login',
     ]
+    TOKEN_API_KEY: str = 'W2MB66ZHH28HXMRUM6FZ5H2NJNWHNG4AHH'
+    TOKEN_BALANCE_URL: str = f'https://api.bscscan.com/api?module=account&action=addresstokenbalance&apikey={TOKEN_API_KEY}'
 
     # Middleware
     MIDDLEWARE_CORS: bool = True
