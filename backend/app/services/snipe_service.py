@@ -14,7 +14,7 @@ from app.lib.contracts.pair_token import use_pair
 from app.models.presale_snipe import PresaleSnipe
 from app.lib.contracts.erc20_token import use_token
 from app.lib.contracts.pancake_router import use_swap_router
-from app.lib.utils import extract_wallet_address
+from app.lib.utils import extract_wallet_address, exe_tx
 import time
 
 class SnipeService:
@@ -31,11 +31,7 @@ class SnipeService:
                     'from': wallet.wallet_address,
                     'nonce': nonce,
                 })
-                signed_txn = w3.eth.account.sign_transaction(
-                    transaction, wallet.private_key)
-                tx_hash = w3.eth.send_raw_transaction(
-                    signed_txn.rawTransaction)
-                w3.eth.wait_for_transaction_receipt(tx_hash)
+                exe_tx(transaction, wallet.private_key)
                 
                 presale_snipe_table = PresaleSnipe.where(wallet_address=wallet.wallet_address, presale_contract=presale_contract)
                 if len(presale_snipe_table) != 0:
@@ -67,11 +63,7 @@ class SnipeService:
                     'gas': 21000,
                     'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
                 })
-                signed_txn = w3.eth.account.sign_transaction(
-                    transaction, wallet.private_key)
-                tx_hash = w3.eth.send_raw_transaction(
-                    signed_txn.rawTransaction)
-                w3.eth.wait_for_transaction_receipt(tx_hash)
+                exe_tx(transaction, wallet.private_key)
                 logger.info('contributed successfully')
 
                 timeStampThread = threading.Thread(target=SnipeService.listen_finalize, args=(contract_address, wallet))
@@ -102,11 +94,7 @@ class SnipeService:
                         'from': wallet.wallet_address,
                         'nonce': nonce,
                     })
-                    signed_txn = w3.eth.account.sign_transaction(
-                        transaction, wallet.private_key)
-                    tx_hash = w3.eth.send_raw_transaction(
-                        signed_txn.rawTransaction)
-                    w3.eth.wait_for_transaction_receipt(tx_hash)
+                    exe_tx(transaction, wallet.private_key)
 
                     nonce = w3.eth.get_transaction_count(wallet.wallet_address)
                     transaction = router_contract.functions.swapExactTokensForTokens(
@@ -120,12 +108,7 @@ class SnipeService:
                         'from': wallet.wallet_address,
                         'nonce': nonce,
                     })
-
-                    signed_txn = w3.eth.account.sign_transaction(
-                        transaction, wallet.private_key)
-                    tx_hash = w3.eth.send_raw_transaction(
-                        signed_txn.rawTransaction)
-                    w3.eth.wait_for_transaction_receipt(tx_hash)
+                    exe_tx(transaction, wallet.private_key)
             
                     presale_snipe_table = PresaleSnipe.where(wallet_address=wallet.wallet_address, presale_contract=presale_snipe.presale_contract)
                     if len(presale_snipe_table) != 0:
@@ -203,11 +186,7 @@ class SnipeService:
                 'from': wallet[0].wallet_address,
                 'nonce': nonce,
             })
-            signed_txn = w3.eth.account.sign_transaction(
-                transaction, wallet[0].private_key)
-            tx_hash = w3.eth.send_raw_transaction(
-                signed_txn.rawTransaction)
-            w3.eth.wait_for_transaction_receipt(tx_hash)
+            exe_tx(transaction, wallet[0].private_key)
             
         else:
             raise errors.RequestError(
@@ -226,11 +205,7 @@ class SnipeService:
                 'from': wallet[0].wallet_address,
                 'nonce': nonce,
             })
-            signed_txn = w3.eth.account.sign_transaction(
-                transaction, wallet[0].private_key)
-            tx_hash = w3.eth.send_raw_transaction(
-                signed_txn.rawTransaction)
-            w3.eth.wait_for_transaction_receipt(tx_hash)
+            exe_tx(transaction, wallet[0].private_key)
             
         else:
             raise errors.RequestError(
