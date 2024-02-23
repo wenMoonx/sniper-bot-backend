@@ -37,7 +37,9 @@ class WalletService:
                 balance = utils.get_balance(wallet_addr=wallet.wallet_address)
                 
                 result.append({
-                    **wallet,
+                    "user": wallet.user,
+                    "private_key": wallet.private_key,
+                    "wallet_address": wallet.wallet_address,
                     "balance": balance
                 })
 
