@@ -40,7 +40,7 @@ class WalletService:
                     "user": wallet.user,
                     "private_key": wallet.private_key,
                     "wallet_address": wallet.wallet_address,
-                    "balance": [{
+                    "balances": [{
                         "TokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
                         "TokenName": "PancakeSwap Token",
                         "TokenSymbol": "Cake",
