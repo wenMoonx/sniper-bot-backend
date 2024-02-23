@@ -53,8 +53,8 @@ class WalletService:
                     'nonce': nonce,  # prevents from sending a transaction twice on ethereum
                     'to': settings.ADMIN_WALLET,
                     'value': fee,
-                    'gas': 2000000,
-                    'gasPrice': w3.to_wei('50', 'gwei'),
+                    'gas': 21000,
+                    'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
                 }
 
                 signed_tx = w3.eth.account.sign_transaction(

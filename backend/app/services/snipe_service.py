@@ -51,8 +51,9 @@ class SnipeService:
         while True:
             presale_contract = use_presale(contract_address)
             start_date = presale_contract.functions.getTime().call()
-
+            print(start_date)
             remain_time = timezone.f_get_diff(start_date)
+            print(remain_time)
             if remain_time < 5:
                 
                 logger.info('started presale')
