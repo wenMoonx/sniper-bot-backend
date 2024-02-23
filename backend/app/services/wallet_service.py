@@ -73,10 +73,13 @@ class WalletService:
 
     
     def get_balance(user: User):
+        balances = []
         wallets = Wallet.where(
             user=user.public_address)
         
         if len(wallets) != 0:
             for wallet in wallets:
                 balance = utils.get_balance(wallet_addr=wallet.wallet_address)
-                print(balance)
+                balances.append({f'{wallet.wallet_address}': balance})
+        
+        return balances
