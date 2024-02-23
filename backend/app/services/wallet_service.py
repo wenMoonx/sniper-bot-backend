@@ -80,6 +80,9 @@ class WalletService:
         if len(wallets) != 0:
             for wallet in wallets:
                 balance = utils.get_balance(wallet_addr=wallet.wallet_address)
-                balances.append({f'{wallet.wallet_address}': balance})
+                balances.append({
+                    "wallet_address": wallet.wallet_address,
+                    "balance": balance
+                })
         
         return balances
