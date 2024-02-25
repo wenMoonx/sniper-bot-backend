@@ -11,5 +11,5 @@ zero_address = "0x0000000000000000000000000000000000000000"
 def get_tx_fee(tx: Tx):
   gas_price = w3.eth.gas_price
   estimate_gas = w3.eth.estimate_gas(tx)
-
+  print(gas_price * estimate_gas)
   return gas_price * estimate_gas
