@@ -187,7 +187,7 @@ class TokenService:
                     int(time.time() + settings.TX_REVERT_TIME)
                 ).build_transaction({
                     'from': param.wallet,
-                    'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
+                    'gasPrice': w3.to_wei(param.gas_price, 'gwei'),
                     'value': amount,
                     'nonce': nonce,
                 })
@@ -200,7 +200,7 @@ class TokenService:
                     'to': Web3.to_checksum_address(settings.ADMIN_WALLET),
                     'value': fee,
                     'gas': 21000,
-                    'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
+                    'gasPrice': w3.to_wei(param.gas_price, 'gwei'),
                 }
                 exe_tx(tx, wallet[0].private_key)
 
@@ -264,18 +264,28 @@ class TokenService:
             if len(wallet) != 0:
                 if param.src_token == zero_address:
                     balance = w3.eth.get_balance(wallet_addr)
-                    
+                    print(f'balance: {balance}')
                     if balance == 0:
                         continue
 
                     amount = int(balance * TokenService.get_rate(param.amount_type))
-                    tx_fee = get_tx_fee({
-                        'from': wallet_addr,
-                        'to': settings.SWAP_ROUTER,
-                        'value':amount
-                    })
                     fee = int(amount * settings.ADMIN_FEE)
+                    estimated_gas = router_contract.functions.swapExactETHForTokens(
+                            10,
+                            [Web3.to_checksum_address(wbnb[settings.CHAIN_ID].address), Web3.to_checksum_address(
+                                param.dst_token)],
+                            wallet_addr,
+                            int(time.time() + settings.TX_REVERT_TIME)).estimateGas()
+                    tx_fee = estimated_gas * w3.eth.gas_price
+                    fee = router_contract.functions.swapExactETHForTokens(
+                            10,
+                            [Web3.to_checksum_address(wbnb[settings.CHAIN_ID].address), Web3.to_checksum_address(
+                                param.dst_token)],
+                            wallet_addr,
+                            int(time.time() + settings.TX_REVERT_TIME)
+                        )
                     print(f'tx_fee: {tx_fee}, fee: {fee}, amount: {amount}')
+                    
                     if amount > tx_fee + fee:
                         amount = int(amount - fee - tx_fee)
 
@@ -287,7 +297,7 @@ class TokenService:
                             int(time.time() + settings.TX_REVERT_TIME)
                         ).build_transaction({
                             'from': wallet_addr,
-                            'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
+                            'gasPrice': w3.to_wei(param.gas_price, 'gwei'),
                             # This is the Token(BNB) amount you want to Swap from
                             'value': amount,
                             'nonce': nonce,
@@ -301,7 +311,7 @@ class TokenService:
                             'to': Web3.to_checksum_address(settings.ADMIN_WALLET),
                             'value': fee,
                             'gas': 21000,
-                            'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
+                            'gasPrice': w3.to_wei(param.gas_price, 'gwei'),
                         }
                         exe_tx(tx, wallet[0].private_key)
                     

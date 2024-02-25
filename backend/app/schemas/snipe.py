@@ -5,6 +5,7 @@ class CreatePresale(BaseModel):
     url: str
     amount: float
     wallet: str
+    gas_price: float
 
 class Claim(BaseModel):
     url: str

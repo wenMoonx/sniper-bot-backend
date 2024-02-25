@@ -20,12 +20,14 @@ class Swap(BaseModel):
     src_token: Optional[str]
     dst_token: Optional[str]
     amount: float
+    gas_price: float
 
 class MultiSwap(BaseModel):
     wallets: Sequence[str]
     src_token: Optional[str]
     dst_token: Optional[str]
     amount_type: int
+    gas_price: float
 
 class MultiTransferEth(BaseModel):
     wallets: Sequence[str]

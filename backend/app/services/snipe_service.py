@@ -42,7 +42,7 @@ class SnipeService:
                 break
     
 
-    def listen_presale_start(contract_address: str, wallet: Wallet, amount: int):
+    def listen_presale_start(contract_address: str, wallet: Wallet, amount: int, gas_price: float):
         logger.info('paased listen_presale_start')
         while True:
             presale_contract = use_presale(contract_address)
@@ -51,7 +51,6 @@ class SnipeService:
             remain_time = timezone.f_get_diff(start_date)
             print(remain_time)
             if remain_time < 5:
-                
                 logger.info('started presale')
                 nonce = w3.eth.get_transaction_count(wallet.wallet_address)
                 transaction = presale_contract.functions.contribute().build_transaction({
@@ -61,7 +60,7 @@ class SnipeService:
                     'value': w3.to_wei(float(amount), 'ether'),
                     'chainId': settings.CHAIN_ID,     
                     'gas': 21000,
-                    'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
+                    'gasPrice': w3.to_wei(gas_price, 'gwei'),
                 })
                 exe_tx(transaction, wallet.private_key)
                 logger.info('contributed successfully')
@@ -161,14 +160,14 @@ class SnipeService:
             print(poolSettings)
             if amount >= min and amount <= max:
                 logger.info('paased min, max check')
-                timeStampThread = threading.Thread(target=SnipeService.listen_presale_start, args=(presale_contract_addr, wallet[0], param.amount))
+                timeStampThread = threading.Thread(target=SnipeService.listen_presale_start, args=(presale_contract_addr, wallet[0], param.amount, param.gas_price))
                 timeStampThread.start()
 
                 contributeThread = threading.Thread(target=SnipeService.listen_contribute, args=(presale_contract_addr, wallet[0], poolSettings[0]))
                 contributeThread.start()
             else:
                 raise errors.RequestError(
-                    msg=f'Your contribution amount will be higher than {w3.from_wei(min, 'ether')}')
+                    msg=f'Your contribution amount will be higher than {w3.from_wei(min, "ether")}')
         else:
             raise errors.RequestError(
                 msg="Please check the sender wallet is correct")
