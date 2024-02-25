@@ -7,6 +7,7 @@ from starlette.authentication import requires
 from app.services.token_service import TokenService
 from app.schemas.token import TokenTransfer, MultiTokenTransfer, Swap, TransferEth, MultiTransferEth, MultiSwap
 from app.lib.token import get_token
+from app.lib.web3 import get_tx_fee
 
 router = APIRouter()
 
@@ -98,3 +99,21 @@ async def multi_swap(request: Request, param: MultiSwap):
     except Exception as e:
         print(e)
         return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail="Please check swap amount and token address")
+    
+
+@router.post("/test")
+async def test(request: Request):
+    try:
+        get_tx_fee({
+            'from': '0xf10133d834c933082e54d00983A6fC0234E7dabC',
+            'to': '0xf10133d834c933082e54d00983A6fC0234E7dabC',
+            'value': '123'
+        })
+        return await response_base.success()
+    except errors.RequestError as exc:
+        return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
+    except Exception as e:
+        print(e)
+        return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail="Please check swap amount and token address")
+    
+

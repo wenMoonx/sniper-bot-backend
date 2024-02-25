@@ -4,7 +4,7 @@ from app.schemas.token import TokenTransfer, MultiTokenTransfer, Swap, MultiTran
 from app.lib.contracts.erc20_token import use_token
 from app.lib.contracts.pancake_router import use_swap_router
 from app.lib.token import get_token_by_address
-from app.lib.web3 import w3, zero_address, Web3
+from app.lib.web3 import w3, zero_address, Web3, get_tx_fee
 from app.lib.token import wbnb
 from app.lib.utils import exe_tx
 from app.core.conf import settings
@@ -136,19 +136,28 @@ class TokenService:
             print(balance)
             if balance == 0:
                 continue
-            print('here')
+
+            print('multi_transfer_eth')
             wallet = Wallet.where(
                 user=request.user.public_address, wallet_address=wallet_addr)
 
             if len(wallet) != 0:
                 nonce = w3.eth.get_transaction_count(wallet_addr)
-                amount = balance * TokenService.get_rate(param.amount_type)
-                print(amount)
+                amount = int(balance * TokenService.get_rate(param.amount_type))
+                
+                receiver = Web3.to_checksum_address(param.receiver)
+
+                tx_fee = get_tx_fee({
+                    'from': wallet_addr,
+                    'to': receiver,
+                    'value':amount
+                })
+
                 tx = {
                     'chainId': settings.CHAIN_ID,
                     'nonce': nonce,  # prevents from sending a transaction twice on ethereum
-                    'to': Web3.to_checksum_address(param.receiver),
-                    'value': int(amount),
+                    'to': receiver,
+                    'value': amount - tx_fee,
                     'gas': 21000,
                     'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
                 }

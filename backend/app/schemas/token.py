@@ -34,3 +34,8 @@ class MultiTransferEth(BaseModel):
 
 class MultiTokenTransfer(MultiTransferEth):
     token: str
+
+class Tx(BaseModel):
+    sender: str
+    receiver: str
+    value: str
