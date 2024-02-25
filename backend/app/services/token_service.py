@@ -275,7 +275,7 @@ class TokenService:
                         'value':amount
                     })
                     fee = int(amount * settings.ADMIN_FEE)
-                    
+                    print(f'tx_fee: {tx_fee}, fee: {fee}, amount: {amount}')
                     if amount > tx_fee + fee:
                         amount = int(amount - fee - tx_fee)
 

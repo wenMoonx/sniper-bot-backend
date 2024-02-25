@@ -83,8 +83,8 @@ class SnipeService:
             presale_snipe_table[0].update_attributes(status='started')
         
         logger.info('started listen_add_liquidity')
+        
         try:
-
             while True:
                 event_filter = pair_contract.events.Mint.create_filter(fromBlock='latest')
                 logger.info('started add_liquidity')
@@ -168,7 +168,7 @@ class SnipeService:
                 contributeThread.start()
             else:
                 raise errors.RequestError(
-                    msg="Please check your contribution amount")
+                    msg=f'Your contribution amount will be higher than {w3.from_wei(min, 'ether')}')
         else:
             raise errors.RequestError(
                 msg="Please check the sender wallet is correct")

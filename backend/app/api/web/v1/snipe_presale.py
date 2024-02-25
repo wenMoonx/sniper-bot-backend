@@ -17,11 +17,11 @@ async def create_presale(request: Request, param: CreatePresale):
     SnipeService.create_presale(request=request, param=param)
     return await response_base.success()
   except errors.RequestError as exc:
-    logger.info(exc)
+    logger.error(exc)
     return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
   except Exception as e:
-    logger.info(e)
-    return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail="")
+    logger.error(e)
+    return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail=e)
 
 
 @router.post("/claim")
@@ -31,11 +31,11 @@ async def claim(request: Request, param: Claim):
     SnipeService.claim(request=request, param=param)
     return await response_base.success()
   except errors.RequestError as exc:
-    logger.info(exc)
+    logger.error(exc)
     return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
   except Exception as e:
-    logger.info(e)
-    return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail="")
+    logger.error(e)
+    return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail=e)
 
 
 @router.post("/withdraw-contribution")
@@ -45,11 +45,11 @@ async def withdrawContribution(request: Request, param: Claim):
     SnipeService.withdrawContribution(request=request, param=param)
     return await response_base.success()
   except errors.RequestError as exc:
-    logger.info(exc)
+    logger.error(exc)
     return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
   except Exception as e:
-    logger.info(e)
-    return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail="")
+    logger.error(e)
+    return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail=e)
   
 
 @router.post("/snipe-token")
@@ -59,11 +59,11 @@ async def snipe_token(request: Request, param: CreatePresale):
     SnipeService.snipe_token(request=request, param=param)
     return await response_base.success()
   except errors.RequestError as exc:
-    logger.info(exc)
+    logger.error(exc)
     return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
   except Exception as e:
-    logger.info(e)
-    return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail="")
+    logger.error(e)
+    return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail=e)
   
   
 @router.get("/{wallet_address}")
@@ -73,11 +73,11 @@ async def get(request: Request, wallet_address: str):
     presale = SnipeService.get(request=request, wallet_address=wallet_address)
     return await response_base.success(data=presale)
   except errors.RequestError as exc:
-    logger.info(exc)
+    logger.error(exc)
     return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
   except Exception as e:
-    logger.info(e)
-    return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail="")
+    logger.error(e)
+    return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail=e)
   
   
 @router.get("/{wallet_address}/{status}")
@@ -87,9 +87,9 @@ async def get(request: Request, wallet_address: str, status: str):
     presale = SnipeService.get_by_status(request=request, wallet_address=wallet_address, status=status)
     return await response_base.success(data=presale)
   except errors.RequestError as exc:
-    logger.info(exc)
+    logger.error(exc)
     return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
   except Exception as e:
-    logger.info(e)
-    return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail="")
+    logger.error(e)
+    return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail=e)
   

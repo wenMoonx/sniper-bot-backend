@@ -8,6 +8,8 @@ from app.services.token_service import TokenService
 from app.schemas.token import TokenTransfer, MultiTokenTransfer, Swap, TransferEth, MultiTransferEth, MultiSwap
 from app.lib.token import get_token
 from app.lib.web3 import get_tx_fee
+from app.common.logger import logger
+
 
 router = APIRouter()
 
@@ -32,7 +34,7 @@ async def transfer(request: Request, param: TokenTransfer):
     except errors.RequestError as exc:
         return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
     except Exception as e:
-        print(e)
+        logger.error(e)
         return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail=e)
 
 
@@ -45,7 +47,7 @@ async def multi_transfer(request: Request, param: MultiTokenTransfer):
     except errors.RequestError as exc:
         return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
     except Exception as e:
-        print(e)
+        logger.error(e)
         return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail=e)
 
 
@@ -58,7 +60,7 @@ async def transfer_eth(request: Request, param: TransferEth):
     except errors.RequestError as exc:
         return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
     except Exception as e:
-        print(e)
+        logger.error(e)
         return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail="Please check send amount")
 
 
@@ -71,7 +73,7 @@ async def multi_transfer_eth(request: Request, param: MultiTransferEth):
     except errors.RequestError as exc:
         return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
     except Exception as e:
-        print(e)
+        logger.error(e)
         return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail="Please check send amount")
 
 
@@ -84,7 +86,7 @@ async def swap(request: Request, param: Swap):
     except errors.RequestError as exc:
         return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
     except Exception as e:
-        print(e)
+        logger.error(e)
         return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail="Please check swap amount and token address")
     
 
@@ -97,7 +99,7 @@ async def multi_swap(request: Request, param: MultiSwap):
     except errors.RequestError as exc:
         return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
     except Exception as e:
-        print(e)
+        logger.error(e)
         return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail="Please check swap amount and token address")
     
 
@@ -113,7 +115,7 @@ async def test(request: Request):
     except errors.RequestError as exc:
         return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
     except Exception as e:
-        print(e)
+        logger.error(e)
         return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail="Please check swap amount and token address")
     
 
