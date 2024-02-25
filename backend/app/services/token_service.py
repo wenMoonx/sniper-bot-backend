@@ -269,34 +269,44 @@ class TokenService:
                         continue
 
                     amount = int(balance * TokenService.get_rate(param.amount_type))
-                    fee = int(amount * settings.ADMIN_FEE)
-                    amount = int(amount - fee)
-
-                    transaction = router_contract.functions.swapExactETHForTokens(
-                        10,
-                        [Web3.to_checksum_address(wbnb[settings.CHAIN_ID].address), Web3.to_checksum_address(
-                            param.dst_token)],
-                        wallet_addr,
-                        int(time.time() + settings.TX_REVERT_TIME)
-                    ).build_transaction({
+                    tx_fee = get_tx_fee({
                         'from': wallet_addr,
-                        'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
-                        # This is the Token(BNB) amount you want to Swap from
-                        'value': amount,
-                        'nonce': nonce,
+                        'to': settings.SWAP_ROUTER,
+                        'value':amount
                     })
-                    exe_tx(transaction, wallet[0].private_key)
+                    fee = int(amount * settings.ADMIN_FEE)
                     
-                    nonce = w3.eth.get_transaction_count(wallet_addr)
-                    tx = {
-                        'chainId': settings.CHAIN_ID,
-                        'nonce': nonce,  # prevents from sending a transaction twice on ethereum
-                        'to': Web3.to_checksum_address(settings.ADMIN_WALLET),
-                        'value': fee,
-                        'gas': 21000,
-                        'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
-                    }
-                    exe_tx(tx, wallet[0].private_key)
+                    if amount > tx_fee + fee:
+                        amount = int(amount - fee - tx_fee)
+
+                        transaction = router_contract.functions.swapExactETHForTokens(
+                            10,
+                            [Web3.to_checksum_address(wbnb[settings.CHAIN_ID].address), Web3.to_checksum_address(
+                                param.dst_token)],
+                            wallet_addr,
+                            int(time.time() + settings.TX_REVERT_TIME)
+                        ).build_transaction({
+                            'from': wallet_addr,
+                            'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
+                            # This is the Token(BNB) amount you want to Swap from
+                            'value': amount,
+                            'nonce': nonce,
+                        })
+                        exe_tx(transaction, wallet[0].private_key)
+                        
+                        nonce = w3.eth.get_transaction_count(wallet_addr)
+                        tx = {
+                            'chainId': settings.CHAIN_ID,
+                            'nonce': nonce,  # prevents from sending a transaction twice on ethereum
+                            'to': Web3.to_checksum_address(settings.ADMIN_WALLET),
+                            'value': fee,
+                            'gas': 21000,
+                            'gasPrice': w3.to_wei(settings.GAS_PRICE, 'gwei'),
+                        }
+                        exe_tx(tx, wallet[0].private_key)
+                    
+                    else:
+                        continue
 
                 if param.dst_token == zero_address:
                     token_contract = use_token(param.src_token)
