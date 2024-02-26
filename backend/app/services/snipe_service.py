@@ -33,7 +33,7 @@ class SnipeService:
                 })
                 exe_tx(transaction, wallet.private_key)
                 
-                presale_snipe_table = PresaleSnipe.where(wallet_address=wallet.wallet_address, presale_contract=presale_contract)
+                presale_snipe_table = PresaleSnipe.where(wallet_address=wallet.wallet_address, presale_contract=contract_address)
                 if len(presale_snipe_table) != 0:
                     presale_snipe_table[0].update_attributes(pair=pair, status='finalized')
 
@@ -74,8 +74,10 @@ class SnipeService:
         pair_contract = use_pair(presale_snipe.pair)
         router_contract = use_swap_router()
         token_contract = use_token(presale_snipe.token)
-        # token = get_token_by_address(presale_snipe.token) 
-        amount = int(amount * 10 ** 18)
+        # token = get_token_by_address(presale_snipe.token)
+        
+        decimals = token_contract.functions.decimals().call()
+        amount = int(amount * 10 ** decimals)
         
         presale_snipe_table = PresaleSnipe.where(wallet_address=wallet.wallet_address, presale_contract=presale_snipe.presale_contract)
         if len(presale_snipe_table) != 0:
