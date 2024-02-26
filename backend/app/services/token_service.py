@@ -234,6 +234,7 @@ class TokenService:
 
                 amount = int(amount - fee)
 
+                nonce = w3.eth.get_transaction_count(param.wallet)
                 transaction = token_contract.functions.approve(Web3.to_checksum_address(settings.SWAP_ROUTER), amount).build_transaction({
                     'from': param.wallet,
                     'nonce': nonce,
@@ -275,7 +276,7 @@ class TokenService:
                 balance = w3.eth.get_balance(wallet_addr)
                 print(f'balance: {balance}')
                 if balance == 0:
-                    continue
+                    return None
 
                 amount = int(balance * TokenService.get_rate(param.amount_type))
                 fee = int(amount * settings.ADMIN_FEE)
@@ -319,7 +320,7 @@ class TokenService:
                     exe_tx(tx, wallet[0].private_key)
                 
                 else:
-                    continue
+                    return None
 
             if param.dst_token == zero_address:
                 token_contract = use_token(param.src_token)
@@ -334,7 +335,7 @@ class TokenService:
                     wallet_addr).call()
                 
                 if balance == 0:
-                    continue
+                    return None
                 
                 amount = int(balance * TokenService.get_rate(param.amount_type))
                 fee = int(amount * settings.ADMIN_FEE)
