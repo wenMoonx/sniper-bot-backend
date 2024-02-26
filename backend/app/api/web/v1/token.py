@@ -9,6 +9,7 @@ from app.schemas.token import TokenTransfer, MultiTokenTransfer, Swap, TransferE
 from app.lib.token import get_token
 from app.lib.web3 import get_tx_fee
 from app.common.logger import logger
+import asyncio
 
 
 router = APIRouter()
@@ -68,7 +69,7 @@ async def transfer_eth(request: Request, param: TransferEth):
 @requires('authenticated', status_code=status.HTTP_401_UNAUTHORIZED)
 async def multi_transfer_eth(request: Request, param: MultiTransferEth):
     try:
-        TokenService.multi_transfer_eth(request=request, param=param)
+        await TokenService.multi_transfer_eth(request=request, param=param)
         return await response_base.success()
     except errors.RequestError as exc:
         return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
@@ -94,7 +95,7 @@ async def swap(request: Request, param: Swap):
 @requires('authenticated', status_code=status.HTTP_401_UNAUTHORIZED)
 async def multi_swap(request: Request, param: MultiSwap):
     try:
-        TokenService.multi_swap(request=request, param=param)
+        await TokenService.multi_swap(request=request, param=param)
         return await response_base.success()
     except errors.RequestError as exc:
         return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)

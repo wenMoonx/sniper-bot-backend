@@ -6,7 +6,7 @@ from starlette import status
 from starlette.authentication import requires
 from app.services.snipe_service import SnipeService
 from app.common.logger import logger
-from app.schemas.snipe import CreatePresale, Claim
+from app.schemas.snipe import CreatePresale, Claim, SnipeToken
 
 router = APIRouter()
 
@@ -54,7 +54,7 @@ async def withdrawContribution(request: Request, param: Claim):
 
 @router.post("/snipe-token")
 @requires('authenticated', status_code=status.HTTP_401_UNAUTHORIZED)
-async def snipe_token(request: Request, param: CreatePresale):
+async def snipe_token(request: Request, param: SnipeToken):
   try:
     SnipeService.snipe_token(request=request, param=param)
     return await response_base.success()

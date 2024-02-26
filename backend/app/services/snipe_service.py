@@ -3,7 +3,7 @@ from fastapi import Request
 from app.lib import errors
 import threading
 from app.core.conf import settings
-from app.schemas.snipe import CreatePresale, Claim
+from app.schemas.snipe import CreatePresale, Claim, SnipeToken
 from app.lib.web3 import w3, Web3
 from app.lib.timezone import timezone
 from app.common.logger import logger
@@ -211,10 +211,9 @@ class SnipeService:
                 msg="Please check the wallet address is correct")
 
 
-    def snipe_token(request: Request, param: CreatePresale):
-        presale_contract_addr = extract_wallet_address(param.url)
+    def snipe_token(request: Request, param: SnipeToken):
         presale_snipe = PresaleSnipe.where(
-            presale_contract=presale_contract_addr, wallet_address=param.wallet)
+            presale_contract=param.contract, wallet_address=param.wallet)
         
         wallet = Wallet.where(
             user=request.user.public_address, wallet_address=param.wallet)

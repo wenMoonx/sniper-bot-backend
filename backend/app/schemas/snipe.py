@@ -10,3 +10,9 @@ class CreatePresale(BaseModel):
 class Claim(BaseModel):
     url: str
     wallet: str
+
+class SnipeToken(BaseModel):
+    contract: str
+    amount: float
+    wallet: str
+    gas_price: float
