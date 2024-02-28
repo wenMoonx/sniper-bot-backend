@@ -14,7 +14,7 @@ router = APIRouter()
 @requires('authenticated', status_code=status.HTTP_401_UNAUTHORIZED)
 async def create_presale(request: Request, param: CreatePresale):
   try:
-    SnipeService.create_presale(request=request, param=param)
+    await SnipeService.create_presale(request=request, param=param)
     return await response_base.success()
   except errors.RequestError as exc:
     logger.error(exc)
@@ -56,7 +56,7 @@ async def withdrawContribution(request: Request, param: Claim):
 @requires('authenticated', status_code=status.HTTP_401_UNAUTHORIZED)
 async def snipe_token(request: Request, param: SnipeToken):
   try:
-    SnipeService.snipe_token(request=request, param=param)
+    await SnipeService.snipe_token(request=request, param=param)
     return await response_base.success()
   except errors.RequestError as exc:
     logger.error(exc)

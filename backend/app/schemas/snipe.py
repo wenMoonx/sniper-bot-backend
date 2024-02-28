@@ -1,10 +1,10 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Sequence
 
 class CreatePresale(BaseModel):
     url: str
     amount: float
-    wallet: str
+    wallets: Sequence[str]
     gas_price: float
 
 class Claim(BaseModel):
@@ -14,5 +14,5 @@ class Claim(BaseModel):
 class SnipeToken(BaseModel):
     contract: str
     amount: float
-    wallet: str
+    wallets: Sequence[str]
     gas_price: float

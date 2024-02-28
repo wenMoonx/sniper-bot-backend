@@ -16,6 +16,7 @@ from app.lib.contracts.erc20_token import use_token
 from app.lib.contracts.pancake_router import use_swap_router
 from app.lib.utils import extract_wallet_address, exe_tx
 import time
+import asyncio
 
 class SnipeService:
     def listen_finalize(contract_address: str, wallet: Wallet):
@@ -140,14 +141,10 @@ class SnipeService:
 
                 PresaleSnipe.create(**new_presale)
                 break
-
-
-    def create_presale(
-        request: Request,
-        param: CreatePresale
-    ):
+                
+    async def create_presale_process(request: Request, param: CreatePresale, wallet_addr: str):
         wallet = Wallet.where(
-            user=request.user.public_address, wallet_address=param.wallet)
+            user=request.user.public_address, wallet_address=wallet_addr)
         if len(wallet) != 0:
             presale_contract_addr = extract_wallet_address(param.url)
             print(presale_contract_addr)
@@ -173,6 +170,17 @@ class SnipeService:
         else:
             raise errors.RequestError(
                 msg="Please check the sender wallet is correct")
+
+
+    async def create_presale(
+        request: Request,
+        param: CreatePresale
+    ):
+        await asyncio.gather(
+            *(SnipeService.create_presale_process(request, param, wallet_addr) for wallet_addr in param.wallets),
+            return_exceptions = False
+        )
+        
 
 
     def claim(request: Request, param: Claim):
@@ -212,10 +220,10 @@ class SnipeService:
             raise errors.RequestError(
                 msg="Please check the wallet address is correct")
 
-
-    def snipe_token(request: Request, param: SnipeToken):
+  
+    async def snipe_token_process(request: Request, param: SnipeToken, wallet_addr: str):
         presale_snipe = PresaleSnipe.where(
-            presale_contract=param.contract, wallet_address=param.wallet)
+            presale_contract=param.contract, wallet_address=wallet_addr)
         
         wallet = Wallet.where(
             user=request.user.public_address, wallet_address=param.wallet)
@@ -226,6 +234,13 @@ class SnipeService:
         else:
             raise errors.RequestError(
                 msg="Please check your parameters are correct.")
+                
+  
+    async def snipe_token(request: Request, param: SnipeToken):
+        await asyncio.gather(
+            *(SnipeService.snipe_token_process(request, param, wallet_addr) for wallet_addr in param.wallets),
+            return_exceptions = False
+        )
         
     
     def get(request: Request, wallet_address: str):
