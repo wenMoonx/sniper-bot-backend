@@ -4,7 +4,7 @@ from app.lib import errors
 import threading
 from app.core.conf import settings
 from app.schemas.snipe import CreatePresale, Claim, SnipeToken
-from app.lib.web3 import w3, Web3
+from app.lib.web3 import w3, Web3, zero_address
 from app.lib.timezone import timezone
 from app.common.logger import logger
 from app.lib.timezone import timezone
@@ -53,7 +53,7 @@ class SnipeService:
             if remain_time < 5:
                 logger.info('started presale')
                 nonce = w3.eth.get_transaction_count(wallet.wallet_address)
-                transaction = presale_contract.functions.contribute().build_transaction({
+                transaction = presale_contract.functions.contribute(0, zero_address).build_transaction({
                     'from': wallet.wallet_address,
                     'nonce': nonce,
                     'to': contract_address,
@@ -202,7 +202,7 @@ class SnipeService:
         
         if len(wallet) != 0:
             nonce = w3.eth.get_transaction_count(wallet[0].wallet_address)
-            transaction = presale_contract.functions.withdrawContribution().build_transaction({
+            transaction = presale_contract.functions.emergencyWithdrawContribution().build_transaction({
                 'from': wallet[0].wallet_address,
                 'nonce': nonce,
             })
