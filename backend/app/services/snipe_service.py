@@ -226,7 +226,7 @@ class SnipeService:
             presale_contract=param.contract, wallet_address=wallet_addr)
         
         wallet = Wallet.where(
-            user=request.user.public_address, wallet_address=param.wallet)
+            user=request.user.public_address, wallet_address=wallet_addr)
         
         if len(presale_snipe) != 0 and len(wallet) != 0:
             timeStampThread = threading.Thread(target=SnipeService.listen_add_liquidity, args=(presale_snipe[0], wallet[0], param.amount))
