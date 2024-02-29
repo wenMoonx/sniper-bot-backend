@@ -50,7 +50,7 @@ class Settings(BaseSettings):
     SWAP_ROUTER: str
     ADMIN_WALLET: str
     TX_REVERT_TIME: int = 3600 * 2
-    FEE_WALLET: float = 0.001
+    FEE_WALLET: float = 1
     ADMIN_FEE: float = 0.01 # Percent
     TX_FEE: float = 0.0001
     GAS_PRICE: int = 3

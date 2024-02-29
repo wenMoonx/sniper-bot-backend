@@ -6,12 +6,13 @@ from app.models.user import User
 from typing import Sequence
 from app.lib import errors, utils
 from app.common.logger import logger
+from app.core.conf import settings
 
 class WalletService:
     def create(user: User) -> tuple[str, str]:
         wallets  = Wallet.where(user=user.public_address)
         if len(wallets) >= settings.LIMIT_FREE_WALLET_CNT + user.wallet_count:
-            raise errors.RequestError(msg="You need to pay bnb token to create additional walelts")
+            raise errors.RequestError(msg=f'You need to pay {settings.FEE_WALLET} BNB to create additional walelts to the account 1')
                 
 
         acct  = Account.create(settings.WALLET_PREFIX)
@@ -73,7 +74,7 @@ class WalletService:
                     user_table[0].update_attributes(wallet_count=(user.wallet_count + 5))
             else:
                 raise errors.RequestError(
-                    msg="You need to check the balance of wallet is bigger than fee")
+                    msg=f'Not enough funds, you need minimum {settings.FEE_WALLET} BNB in your account1.')
 
         else:
             raise errors.RequestError(
