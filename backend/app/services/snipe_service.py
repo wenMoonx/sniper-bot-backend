@@ -243,13 +243,30 @@ class SnipeService:
         )
         
     
-    def get(request: Request, wallet_address: str):
-        presale_snipe = PresaleSnipe.where(wallet_address=wallet_address)
+    def get(request: Request):
+        
+        result = []
+        wallets  = Wallet.where(user=request.user.public_address)
 
-        return presale_snipe
+        if len(wallets) != 0:
+            for wallet in wallets:
+                presale_snipe = PresaleSnipe.where(wallet_address=wallet.wallet_address)
+                if len(presale_snipe) != 0:                   
+                    result.append(presale_snipe[0])
+
+        return result
         
     
-    def get_by_status(request: Request, wallet_address: str, status: str):
-        presale_snipe = PresaleSnipe.where(wallet_address=wallet_address, status=status)
+    def get_by_status(request: Request, status: str):
+        
+        result = []
+        wallets  = Wallet.where(user=request.user.public_address)
 
-        return presale_snipe
+        if len(wallets) != 0:
+            for wallet in wallets:
+                presale_snipe = PresaleSnipe.where(wallet_address=wallet.wallet_address, status=status)
+
+                if len(presale_snipe) != 0:                   
+                    result.append(presale_snipe[0])
+
+        return result

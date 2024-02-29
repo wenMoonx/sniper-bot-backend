@@ -66,12 +66,12 @@ async def snipe_token(request: Request, param: SnipeToken):
     return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail=e)
   
   
-@router.get("/{wallet_address}")
+@router.get("/")
 @requires('authenticated', status_code=status.HTTP_401_UNAUTHORIZED)
-async def get(request: Request, wallet_address: str):
+async def get(request: Request):
   try:
-    presale = SnipeService.get(request=request, wallet_address=wallet_address)
-    return await response_base.success(data=presale)
+    presales = SnipeService.get(request=request)
+    return await response_base.success(data=presales)
   except errors.RequestError as exc:
     logger.error(exc)
     return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
@@ -80,12 +80,12 @@ async def get(request: Request, wallet_address: str):
     return await response_base.fail(res=CustomResponseCode.HTTP_500, error_detail=e)
   
   
-@router.get("/{wallet_address}/{status}")
+@router.get("/{status}")
 @requires('authenticated', status_code=status.HTTP_401_UNAUTHORIZED)
-async def get(request: Request, wallet_address: str, status: str):
+async def get(request: Request, status: str):
   try:
-    presale = SnipeService.get_by_status(request=request, wallet_address=wallet_address, status=status)
-    return await response_base.success(data=presale)
+    presales = SnipeService.get_by_status(request=request, status=status)
+    return await response_base.success(data=presales)
   except errors.RequestError as exc:
     logger.error(exc)
     return await response_base.fail(error_detail=exc.msg, res=CustomResponseCode.HTTP_400)
